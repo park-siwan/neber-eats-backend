@@ -5,6 +5,7 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
+import { LoginInput, LoginOutput } from './dtos/login.dto';
 
 /** resolver가 하는 일은 오직 input 가지고 output을 보내는 것
  * ex) if else 사용은 여기서 안함
@@ -33,4 +34,7 @@ export class UserResolver {
       return { error, ok: false };
     }
   }
+
+  @Mutation((returns) => LoginOutput)
+  async login(@Args('input') loginInput: LoginInput) {}
 }
