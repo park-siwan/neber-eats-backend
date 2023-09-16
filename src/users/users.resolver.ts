@@ -36,5 +36,5 @@ export class UserResolver {
   }
 
   @Mutation((returns) => LoginOutput)
-  async login(@Args('input') loginInput: LoginInput) {}
+  async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {}
 }
