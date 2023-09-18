@@ -19,11 +19,6 @@ import { AuthUser } from 'src/auth/auth-user.decorator';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Query((returns) => Boolean)
-  hi() {
-    return true;
-  }
-
   @Mutation((returns) => CreateAccountOutput)
   async createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
