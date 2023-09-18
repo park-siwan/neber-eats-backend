@@ -8,6 +8,7 @@ import {
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthUser } from 'src/auth/auth-user.decorator';
 
 /** resolver가 하는 일은 오직 input 가지고 output을 보내는 것
  * ex) if else 사용은 여기서 안함
@@ -45,5 +46,7 @@ export class UserResolver {
 
   @Query((returns) => User)
   @UseGuards(AuthGuard)
-  me() {}
+  me(@AuthUser() authUser: User) {
+    return authUser;
+  }
 }
