@@ -25,9 +25,11 @@ export class MailService {
       .create(this.options.domain, {
         from: `Excited User <mailgun@${this.options.domain}>`,
         to: ['siwandevelop@gmail.com'],
-        subject: 'Hello',
-        text: 'Testing some Mailgun awesomeness!',
-        html: '<h1>Testing some Mailgun awesomeness!</h1>',
+        subject: 'Hello2',
+        template: 'confirm mail',
+        ['X-Mailgun-Variables']: '{"test": "test"}',
+        ['v:code']: 'asdfsd',
+        ['v:username']: 'siwan!!!',
       })
       .then((msg) => console.log(msg)) // logs response data
       .catch((err) => console.log(err)); // logs any error
