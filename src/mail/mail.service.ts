@@ -4,6 +4,7 @@ import * as FormData from 'form-data';
 import { CONFIG_OPTIONS } from 'src/common/common.constants';
 import got from 'got';
 import fetch from 'node-fetch';
+import Mailgun from 'mailgun.js';
 
 @Injectable()
 export class MailService {
@@ -14,24 +15,21 @@ export class MailService {
   }
 
   private async sendEmail(subject: string, content: string) {
-    const form = new FormData();
-    form.append('from', `Excited User <mailgun@${this.options.domain}>`);
-    form.append('to', 'siwandevelop@gmail.com'); //유저 메일명 들어가는 곳 인수로 넣어야함
-    form.append('subject', subject);
-    form.append('text', content);
+    const mailgun = new Mailgun(FormData);
+    const mg = mailgun.client({
+      username: 'api',
+      key: this.options.apiKey,
+    });
 
-    const response = await got(
-      `https://api.mailgun.net/v3/${this.options.domain}/messages`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${Buffer.from(
-            `api:${this.options.apiKey}`,
-          ).toString('base64')}`,
-        },
-        body: form,
-      },
-    );
-    console.log('response:', response);
+    mg.messages
+      .create(this.options.domain, {
+        from: `Excited User <mailgun@${this.options.domain}>`,
+        to: ['siwandevelop@gmail.com'],
+        subject: 'Hello',
+        text: 'Testing some Mailgun awesomeness!',
+        html: '<h1>Testing some Mailgun awesomeness!</h1>',
+      })
+      .then((msg) => console.log(msg)) // logs response data
+      .catch((err) => console.log(err)); // logs any error
   }
 }
