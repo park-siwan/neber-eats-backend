@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { EmailVar, MailModuleOptions } from './mail.interfaces';
 import * as FormData from 'form-data';
-import { CONFIG_OPTIONS } from 'src/common/common.constants';
+import { CONFIG_OPTIONS } from '../common/common.constants';
 import got from 'got';
 import fetch from 'node-fetch';
 import Mailgun from 'mailgun.js';

@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
-import { AuthUser } from 'src/auth/auth-user.decorator';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthUser } from '../auth/auth-user.decorator';
+import { AuthGuard } from '../auth/auth.guard';
 import {
   CreateAccountInput,
   CreateAccountOutput,
@@ -14,7 +14,7 @@ import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import {
   VerifyEmailInput,
   VerifyEmailOutput,
-} from 'src/common/dtos/verify-email.dto';
+} from '../common/dtos/verify-email.dto';
 
 @Resolver((of) => User)
 export class UserResolver {
