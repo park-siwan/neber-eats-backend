@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { MailModuleOptions } from './mail.interfaces';
+import { EmailVar, MailModuleOptions } from './mail.interfaces';
 import * as FormData from 'form-data';
 import { CONFIG_OPTIONS } from 'src/common/common.constants';
 import got from 'got';
@@ -14,7 +14,11 @@ export class MailService {
     // this.sendEmail('testing', 'test');
   }
 
-  private async sendEmail(subject: string, content: string) {
+  private async sendEmail(
+    subject: string,
+    template: string,
+    emailVars: EmailVar[],
+  ) {
     const mailgun = new Mailgun(FormData);
     const mg = mailgun.client({
       username: 'api',
@@ -33,5 +37,11 @@ export class MailService {
       })
       .then((msg) => console.log(msg)) // logs response data
       .catch((err) => console.log(err)); // logs any error
+  }
+  sendVerificationEmail(email: string, code: string) {
+    this.sendEmail('Verify Your Email', 'verify-email', [
+      { key: 'code', value: code },
+      { key: 'username', value: email },
+    ]);
   }
 }
