@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-import { UserService } from './users.service';
-
-import { User } from './entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Verification } from './entities/verification.entity';
+import { exec } from 'child_process';
 import { JwtService } from 'src/jwt/jwt.service';
 import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
+import { Verification } from './entities/verification.entity';
+import { UserService } from './users.service';
 
 const mockRepository = () => ({
   findOne: jest.fn(),
@@ -15,7 +15,7 @@ const mockRepository = () => ({
 });
 
 const mockJwtService = {
-  sign: jest.fn(),
+  sign: jest.fn(() => 'signed-token-baby'),
   verify: jest.fn(),
 };
 
@@ -27,10 +27,11 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('UserService', () => {
   let service: UserService;
-  let mailService: MailService;
   let usersRepository: MockRepository<User>;
   let verificationsRepository: MockRepository<Verification>;
+  let mailService: MailService;
   let jwtService: JwtService;
+
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
@@ -55,9 +56,9 @@ describe('UserService', () => {
     }).compile();
     service = module.get<UserService>(UserService);
     mailService = module.get<MailService>(MailService);
+    jwtService = module.get<JwtService>(JwtService);
     usersRepository = module.get(getRepositoryToken(User));
     verificationsRepository = module.get(getRepositoryToken(Verification));
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   it('should be defined', () => {
@@ -82,6 +83,7 @@ describe('UserService', () => {
         error: 'There is a user with that email already',
       });
     });
+
     it('should create a new user', async () => {
       usersRepository.findOne.mockResolvedValue(undefined);
       usersRepository.create.mockReturnValue(createAccountArgs);
@@ -118,6 +120,7 @@ describe('UserService', () => {
       );
       expect(result).toEqual({ ok: true });
     });
+
     it('should fail on exception', async () => {
       usersRepository.findOne.mockRejectedValue(new Error());
       const result = await service.createAccount(createAccountArgs);
@@ -136,10 +139,7 @@ describe('UserService', () => {
       const result = await service.login(loginArgs);
 
       expect(usersRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(usersRepository.findOne).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.any(Object),
-      );
+      expect(usersRepository.findOne).toHaveBeenCalledWith(expect.any(Object));
       expect(result).toEqual({
         ok: false,
         error: 'User not found',
