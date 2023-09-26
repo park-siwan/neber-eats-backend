@@ -6,6 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Verification } from './entities/verification.entity';
 import { JwtService } from 'src/jwt/jwt.service';
 import { MailService } from 'src/mail/mail.service';
+import { Repository } from 'typeorm';
 
 const mockRepository = {
   findOne: jest.fn(),
@@ -22,9 +23,11 @@ const mockMailService = {
   sendVerificationEmail: jest.fn(),
 };
 
+type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+
 describe('UserService', () => {
   let service: UserService;
-
+  let userRepository: MockRepository<User>;
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [
@@ -48,13 +51,17 @@ describe('UserService', () => {
       ],
     }).compile();
     service = module.get<UserService>(UserService);
+    userRepository = module.get(getRepositoryToken(User));
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it.todo('createAccount');
+  describe('createAccount', () => {
+    it('should fail if user exists', () => {});
+  });
+
   it.todo('login');
   it.todo('findById');
   it.todo('editProfile');
