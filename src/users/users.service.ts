@@ -74,19 +74,14 @@ export class UserService {
     } catch (error) {
       return {
         ok: false,
-        error,
+        error: "Can't log user in.",
       };
     }
   }
   async findById(id: number): Promise<UserProfileOutput> {
     try {
-      const user = await this.users.findOne({ where: { id } });
-      if (user) {
-        return {
-          ok: true,
-          user: user,
-        };
-      }
+      const user = await this.users.findOneOrFail({ where: { id } });
+      return { ok: true, user };
     } catch (error) {
       return { ok: false, error: 'User Not Found' };
     }
@@ -131,9 +126,9 @@ export class UserService {
         await this.verifications.delete(verification.id);
         return { ok: true };
       }
-      throw new Error();
+      return { ok: false, error: 'Verification not found.' };
     } catch (error) {
-      return { ok: false, error };
+      return { ok: false, error: 'Could not verify email.' };
     }
   }
 }
