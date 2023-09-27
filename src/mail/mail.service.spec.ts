@@ -63,16 +63,17 @@ describe('MailService', () => {
       expect(formSpy).toHaveBeenCalled();
       expect(got.post).toHaveBeenCalledTimes(1);
       expect(got.post).toHaveBeenCalledWith(
-        `https://api.mailgun.net/v3/${TEST_DOMAIN}/message`,
+        `https://api.mailgun.net/v3/${TEST_DOMAIN}/messages`,
+        expect.any(Object),
       );
       expect(ok).toEqual(true);
-      it('fails on error', async () => {
-        jest.spyOn(got, 'post').mockImplementation(() => {
-          throw new Error();
-        });
-        const ok = await service.sendEmail('', '', []);
-        expect(ok).toEqual(false);
+    });
+    it('fails on error', async () => {
+      jest.spyOn(got, 'post').mockImplementation(() => {
+        throw new Error();
       });
+      const ok = await service.sendEmail('', '', []);
+      expect(ok).toEqual(false);
     });
   });
 });
