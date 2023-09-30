@@ -69,11 +69,11 @@ describe('UserModule (e2e)', () => {
         .send({
           query: `
         mutation {
-          createAccount(input:{
-            email:"${EMAIL}"
-            password:"12345
+          createAccount(input: {
+            email:"${EMAIL}",
+            password:"12345",
             role:Owner
-          }){
+          }) {
             ok
             error
           }
