@@ -20,6 +20,11 @@ export class Restaurant extends CoreEntity {
   @IsString()
   coverImg: string;
 
+  @Field(() => String, { defaultValue: '강남' })
+  @Column()
+  @IsString()
+  address: string;
+
   @Field(() => Category, { nullable: true })
   @ManyToOne((type) => Category, (category) => category.restaurants, {
     nullable: true,
