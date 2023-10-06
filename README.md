@@ -34,6 +34,7 @@ The Backend of Nuber Eats Clone
 
 - Edit Restaurant
 - Delete Restaurant
+- Search Restaurant
 
 - Create Dish
 - Edit Dish
