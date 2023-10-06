@@ -23,6 +23,7 @@ import { Category } from './restaurants/entities/category.entity';
 import { AuthModule } from './auth/auth.module';
 
 import { CategoryRepository } from './restaurants/repositories/category.repository';
+import { DishModule } from './dish/dish.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { CategoryRepository } from './restaurants/repositories/category.reposito
     AuthModule,
     UsersModule,
     RestaurantsModule,
+    DishModule,
   ],
   controllers: [],
   providers: [],
