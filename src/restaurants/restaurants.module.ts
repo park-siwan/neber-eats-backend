@@ -9,7 +9,7 @@ import {
 import { RestaurantService } from './restaurants.service';
 
 import { CategoryRepository } from './repositories/category.repository';
-import { Dish } from 'src/dish/entities/dish.entity';
+import { Dish } from 'src/restaurants/entities/dish.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Restaurant, Dish])],
