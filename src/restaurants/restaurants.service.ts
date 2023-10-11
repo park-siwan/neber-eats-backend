@@ -152,7 +152,7 @@ export class RestaurantService {
     }
   }
   countRestaurants(category: Category) {
-    return this.restaurants.count({ where: { categoryId: category.id } });
+    return this.restaurants.count({ where: { category: { id: category.id } } });
   }
   async findCategoryBySlug({
     slug,
@@ -170,7 +170,7 @@ export class RestaurantService {
       }
       const restaurants = await this.restaurants.find({
         where: {
-          categoryId: category.id,
+          category: { id: category.id },
         },
         take: 25,
         skip: (page - 1) * 25,
