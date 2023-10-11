@@ -24,7 +24,7 @@ import { Category } from './entities/category.entity';
 import { AllCategoriesOutput } from './dtos/all-category.dto';
 import { CategoryOutput, CategoryInput } from './dtos/category.dto';
 import { RestaurantsInput, RestaurantsOutput } from './dtos/restaurants.dto';
-import { RestaurantInput } from './dtos/restaurant.dto';
+import { RestaurantInput, RestaurantOutput } from './dtos/restaurant.dto';
 import {
   SearchRestaurantInput,
   SearchRestaurantOutput,
@@ -103,10 +103,10 @@ export class CategoryResolver {
     return this.restaurantService.allRestaurants(restaurantsInput);
   }
 
-  @Query(() => RestaurantsOutput)
+  @Query(() => RestaurantOutput)
   restaurant(
     @Args('input') restaurantInput: RestaurantInput,
-  ): Promise<RestaurantsOutput> {
+  ): Promise<RestaurantOutput> {
     return this.restaurantService.findRestaurantById(restaurantInput);
   }
 
