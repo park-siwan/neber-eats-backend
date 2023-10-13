@@ -8,10 +8,11 @@ import { User } from 'src/users/entities/user.entity';
 
 import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
+import { EditOrderInput, EditOrderOutput } from './dtos/edit-order.dto';
 
 @Resolver(() => Order)
 export class OrderResolver {
-  constructor(private readonly orderService: OrderService) {}
+  constructor(private readonly ordersService: OrderService) {}
 
   @Mutation(() => CreateOrderOutput)
   @Role(['Client'])
@@ -20,7 +21,7 @@ export class OrderResolver {
     @Args('input')
     createOrderInput: CreateOrderInput,
   ): Promise<CreateOrderOutput> {
-    return this.orderService.createOrder(customer, createOrderInput);
+    return this.ordersService.createOrder(customer, createOrderInput);
   }
 
   @Query(() => GetOrdersOutput)
@@ -29,7 +30,7 @@ export class OrderResolver {
     @AuthUser() user: User,
     @Args('input') getOrderInput: GetOrdersInput,
   ): Promise<GetOrdersOutput> {
-    return this.orderService.getOrders(user, getOrderInput);
+    return this.ordersService.getOrders(user, getOrderInput);
   }
 
   @Query(() => GetOrderOutput)
@@ -38,6 +39,15 @@ export class OrderResolver {
     @AuthUser() user: User,
     @Args('input') getOrderInput: GetOrderInput,
   ): Promise<GetOrderOutput> {
-    return this.orderService.getOrder(user, getOrderInput);
+    return this.ordersService.getOrder(user, getOrderInput);
+  }
+
+  @Mutation(() => EditOrderOutput)
+  @Role(['Any'])
+  async editOrder(
+    @AuthUser() user: User,
+    @Args('input') editOrderInput: EditOrderInput,
+  ) {
+    return this.ordersService.editOrder(user, editOrderInput);
   }
 }
