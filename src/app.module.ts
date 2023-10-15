@@ -70,7 +70,20 @@ import { OrderItem } from './order/entities/order-item.entity';
       installSubscriptionHandlers: true,
       driver: ApolloDriver,
       autoSchemaFile: true,
-      context: ({ req }) => ({ user: req['user'] }),
+      // context: ({ req, connection }) => {
+      //   const TOKEN_KEY = 'x-jwt';
+      //   return {
+      //     token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
+      //   };
+      // },
+      subscriptions: {
+        'subscriptions-transport-ws': {
+          onConnect: (connectionParams: any) => ({
+            token: connectionParams['x-jwt'],
+          }),
+        },
+      },
+      context: ({ req }) => ({ token: req.headers['x-jwt'] }), //http와 ws 따로 설정한다.
     }),
 
     JwtModule.forRoot({
@@ -86,14 +99,9 @@ import { OrderItem } from './order/entities/order-item.entity';
     UsersModule,
     RestaurantsModule,
     OrderModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(JwtMiddleware)
-      .forRoutes({ path: '/graphql', method: RequestMethod.POST });
-  }
-}
+export class AppModule {}
