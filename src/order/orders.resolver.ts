@@ -10,7 +10,7 @@ import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
 import { EditOrderInput, EditOrderOutput } from './dtos/edit-order.dto';
 import { PubSub } from 'graphql-subscriptions';
-import { PUB_SUB } from 'src/common/common.constants';
+import { NEW_PENDING_ORDER, PUB_SUB } from 'src/common/common.constants';
 import { Inject } from '@nestjs/common';
 
 @Resolver(() => Order)
@@ -57,23 +57,14 @@ export class OrderResolver {
     return this.ordersService.editOrder(user, editOrderInput);
   }
 
-  @Mutation(() => Boolean)
-  async potatoReady(@Args('potatoId') potatoId: number) {
-    await this.pubSub.publish('hotPotatos', {
-      readyPotato: potatoId,
-    });
-    return true;
-  }
-
-  @Subscription(() => String, {
-    filter: ({ readyPotato }, { potatoId }) => {
-      return readyPotato === potatoId;
+  @Subscription((returns) => Order, {
+    filter: ({ pendingOrders: { ownerId } }, _, { user }) => {
+      return ownerId === user.id;
     },
-    resolve: ({ readyPotato }) =>
-      `Your potato width the id ${readyPotato} is ready!`,
+    resolve: ({ pendingOrders: { order } }) => order,
   })
-  @Role(['Any'])
-  readyPotato(@Args('potatoId') potatoId: number) {
-    return this.pubSub.asyncIterator('hotPotatos');
+  @Role(['Owner'])
+  pendingOrders() {
+    return this.pubSub.asyncIterator(NEW_PENDING_ORDER);
   }
 }
