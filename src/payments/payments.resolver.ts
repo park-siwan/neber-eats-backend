@@ -12,9 +12,7 @@ import { Role } from 'src/auth/role.decorator';
 
 @Resolver(() => Payment)
 export class PaymentResolver {
-  constructor(
-    @InjectRepository(Payment) private readonly paymentService: PaymentService,
-  ) {}
+  constructor(private readonly paymentService: PaymentService) {}
 
   @Mutation(() => CreatePaymentOutput)
   @Role(['Owner'])
