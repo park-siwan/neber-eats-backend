@@ -28,6 +28,7 @@ import { Order } from './order/entities/order.entity';
 import { OrderItem } from './order/entities/order-item.entity';
 import { PaymentsModule } from './payments/payments.module';
 import { Payment } from './payments/entities/payment.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { Payment } from './payments/entities/payment.entity';
       //     token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
       //   };
       // },
+
       subscriptions: {
         'subscriptions-transport-ws': {
           onConnect: (connectionParams: any) => ({
@@ -88,11 +90,10 @@ import { Payment } from './payments/entities/payment.entity';
       },
       context: ({ req }) => ({ token: req.headers['x-jwt'] }), //http와 ws 따로 설정한다.
     }),
-
+    ScheduleModule.forRoot(),
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
     }),
-
     MailModule.forRoot({
       apiKey: process.env.MAILGUN_API_KEY,
       domain: process.env.MAILGUN_DOMAIN_NAME,
