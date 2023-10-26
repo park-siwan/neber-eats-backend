@@ -9,7 +9,7 @@ async function bootstrap() {
   app.enableCors({
     origin: ['https://studio.apollographql.com', 'http://localhost:4001'], // 허용할 출처
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // 허용할 HTTP 메서드
-    allowedHeaders: ['Content-Type', 'Accept', 'Origin'], // 허용할 헤더
+    allowedHeaders: ['Content-Type', 'Accept', 'Origin', 'x-jwt'], // 허용할 헤더
   });
   await app.listen(process.env.PORT || 4000);
 }
